@@ -101,7 +101,7 @@ export default function TestPage() {
             const scores = calculatePaimaScores(rawData);
 
             // Determine Profile Key
-            const { determineProfile } = await import('@/lib/profiling');
+            const { determineDetailedProfile } = await import('@/lib/profiling');
             const profileKey = determineDetailedProfile(scores);
 
             console.log("Calculated Scores:", scores);

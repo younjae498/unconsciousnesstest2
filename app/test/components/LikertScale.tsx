@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { } from 'react';
 
 interface LikertScaleProps {
     value: number;

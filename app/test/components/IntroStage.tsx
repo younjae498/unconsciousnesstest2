@@ -44,6 +44,7 @@ export default function IntroStage({ onComplete }: IntroStageProps) {
                     {/* Item 1 */}
                     <div className="relative z-10 bg-white w-full p-6 rounded-3xl border border-gray-100 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.05)] flex flex-col items-center text-center gap-4 hover:border-gray-200 transition-all">
                         <div className="w-16 h-16 shrink-0 bg-gray-50 rounded-2xl flex items-center justify-center p-3 border border-gray-100">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src="/icon_discovery.png" alt="Discovery" className="w-full h-full object-contain opacity-80" />
                         </div>
                         <div>
@@ -57,6 +58,7 @@ export default function IntroStage({ onComplete }: IntroStageProps) {
                     {/* Item 2 */}
                     <div className="relative z-10 bg-white w-full p-6 rounded-3xl border border-gray-100 shadow-[0_10px_30px_-10px_rgba(0,0,0,0.05)] flex flex-col items-center text-center gap-4 hover:border-gray-200 transition-all">
                         <div className="w-16 h-16 shrink-0 bg-gray-50 rounded-2xl flex items-center justify-center p-3 border border-gray-100">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src="/icon_pattern.png" alt="Pattern" className="w-full h-full object-contain opacity-80" />
                         </div>
                         <div>
@@ -70,6 +72,7 @@ export default function IntroStage({ onComplete }: IntroStageProps) {
                     {/* Item 3 */}
                     <div className="relative z-10 bg-gray-900 w-full p-6 rounded-3xl border border-gray-900 shadow-xl shadow-gray-900/20 flex flex-col items-center text-center gap-4 transform scale-105">
                         <div className="w-16 h-16 shrink-0 bg-white/10 rounded-2xl flex items-center justify-center p-3 border border-white/10">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img src="/icon_change.png" alt="Change" className="w-full h-full object-contain invert" />
                         </div>
                         <div>

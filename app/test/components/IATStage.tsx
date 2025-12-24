@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { TestData } from '../../data/testData';
 
 interface IATStageProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onComplete: (data: any) => void;
 }
 
@@ -64,7 +65,7 @@ export default function IATStage({ onComplete }: IATStageProps) {
         const cats = [...config.left.cats, ...config.right.cats];
         for (let i = 0; i < needed; i++) {
             const cat = cats[i % cats.length];
-            // @ts-ignore
+            // @ts-expect-error - indexing with string
             const wordList = TestData.iatCategories[cat];
             const word = wordList[Math.floor(Math.random() * wordList.length)];
             allWords.push(word);
@@ -74,6 +75,7 @@ export default function IATStage({ onComplete }: IATStageProps) {
         setTrials(allWords.sort(() => Math.random() - 0.5));
         setCurrentWordIndex(0);
         setIsDidactic(true);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [phase]);
 
     const startPhase = () => {
@@ -91,12 +93,12 @@ export default function IATStage({ onComplete }: IATStageProps) {
 
         // Check Left
         for (const cat of config!.left.cats) {
-            // @ts-ignore
+            // @ts-expect-error - indexing with string
             if (TestData.iatCategories[cat].includes(currentWord)) correctSide = 'LEFT';
         }
         // Check Right
         for (const cat of config!.right.cats) {
-            // @ts-ignore
+            // @ts-expect-error - indexing with string
             if (TestData.iatCategories[cat].includes(currentWord)) correctSide = 'RIGHT';
         }
 

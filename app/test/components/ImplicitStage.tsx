@@ -7,6 +7,7 @@ import LikertScale from './LikertScale';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ImplicitStageProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onComplete: (data: any) => void;
 }
 
@@ -36,6 +37,7 @@ export default function ImplicitStage({ onComplete }: ImplicitStageProps) {
         }, 1000);
 
         return () => clearInterval(timer);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentImageIndex, currentQuestionIndex, isTransitioning]);
 
     const handleNext = () => {
@@ -130,6 +132,7 @@ export default function ImplicitStage({ onComplete }: ImplicitStageProps) {
                             <div className="bg-white shadow-[0_40px_70px_-15px_rgba(0,0,0,0.15)] rounded-[2px] ring-1 ring-black/5 overflow-hidden">
                                 <div className="relative overflow-hidden group">
                                     <div className="absolute inset-0 bg-black/5 pointer-events-none z-10" /> {/* Inner shadow */}
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
                                         src={currentImage.src}
                                         alt="Psychological Projection"
