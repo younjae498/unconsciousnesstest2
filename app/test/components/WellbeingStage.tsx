@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import LikertScale from './LikertScale';
 
 interface WellbeingStageProps {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     onComplete: (data: any) => void;
 }
 

@@ -146,11 +146,13 @@ export default function ExplicitStage({ onComplete }: ExplicitStageProps) {
                             <div className="inline-block px-3 py-1 bg-gray-50 rounded-full text-[10px] font-black text-gray-300 tracking-[0.2em] uppercase">
                                 Question {String(currentQuestionIndex + 1).padStart(2, '0')}
                             </div>
-                            <h3 className="text-xl md:text-2xl font-bold leading-relaxed text-gray-900"
-                                dangerouslySetInnerHTML={{
-                                    __html: questions[currentQuestionIndex].replace(/\*\*(.*?)\*\*/g, '<span class="text-amber-600">$1</span>')
-                                }}
-                            />
+                            {questions && questions[currentQuestionIndex] && (
+                                <h3 className="text-xl md:text-2xl font-bold leading-relaxed text-gray-900"
+                                    dangerouslySetInnerHTML={{
+                                        __html: questions[currentQuestionIndex].replace(/\*\*(.*?)\*\*/g, '<span class="text-amber-600">$1</span>')
+                                    }}
+                                />
+                            )}
                         </div>
 
                         <div className="pt-4">

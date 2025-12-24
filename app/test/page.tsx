@@ -17,7 +17,7 @@ type TestStage = 'INTRO' | 'IAT' | 'IMPLICIT' | 'EXPLICIT' | 'WELLBEING';
 export default function TestPage() {
     const router = useRouter();
     const {
-        currentStep: currentStage, setStep: setStage, setTestResult, resetTest,
+        currentStep: currentStage, setStep: setStage, setTestResult,
         implicitAnswers, explicitAnswers, wellbeingAnswers, iatResults, explicitGoal,
         setIatResults, setImplicitAnswer, setExplicitAnswer, setWellbeingAnswer, setExplicitGoal
     } = useTestStore();
@@ -48,6 +48,7 @@ export default function TestPage() {
         }
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const handleStageComplete = async (stageResult: any) => {
         const currentIndex = stages.indexOf(currentStage as TestStage);
 
@@ -99,84 +100,78 @@ export default function TestPage() {
             console.log("Calculating Scores with:", rawData);
             const scores = calculatePaimaScores(rawData);
 
-            // Determine Profile Key
-            const { determineProfile } = await import('@/lib/profiling');
-            const profileKey = determineDetailedProfile(scores);
-
-            console.log("Calculated Scores:", scores);
-            console.log("Determined Profile:", profileKey);
-
-            // Update Store with Scores & Profile
-            setTestResult({
-                scores,
-                profile: profileKey,
+            profile: profileKey,
                 timestamp: new Date().toISOString(),
-                answers: rawData // Store raw answers including goal
+                    answers: rawData // Store raw answers including goal
+        });
+
+        // Attempt Save to DB
+        try {
+            await fetch('/api/result/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    scores,
+                    profileKey,
+                    answers: rawData, // explicitGoal is now inside answers
+                })
             });
-
-            // Attempt Save to DB
-            try {
-                await fetch('/api/result/save', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        scores,
-                        profileKey,
-                        answers: rawData, // explicitGoal is now inside answers
-                    })
-                });
-            } catch (e) {
-                console.warn('Save failed - continuing to report', e);
-            }
-
-            // Finish (sets finished flag)
-            setStage('RESULT');
-            router.push('/report');
+        } catch (e) {
+            console.warn('Save failed - continuing to report', e);
         }
-    };
+
+        // Finish (sets finished flag)
+        setStage('RESULT');
+        router.push('/report');
+    }
+};
 
 
-    const getStageComponent = () => {
-        switch (currentStage) {
-            case 'INTRO':
-                return <IntroStage onComplete={() => handleStageComplete({})} />;
-            case 'IAT':
-                return <IATStage onComplete={(data: any) => handleStageComplete(data)} />;
-            case 'IMPLICIT':
-                return <ImplicitStage onComplete={(data: any) => handleStageComplete(data)} />;
-            case 'EXPLICIT':
-                return <ExplicitStage onComplete={(data: any) => handleStageComplete(data)} />;
-            case 'WELLBEING':
-                return <WellbeingStage onComplete={(data: any) => handleStageComplete(data)} />;
-            default:
-                return null;
-        }
-    };
+const getStageComponent = () => {
+    switch (currentStage) {
+        case 'INTRO':
+            return <IntroStage onComplete={() => handleStageComplete({})} />;
+        case 'IAT':
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return <IATStage onComplete={(data: any) => handleStageComplete(data)} />;
+        case 'IMPLICIT':
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return <ImplicitStage onComplete={(data: any) => handleStageComplete(data)} />;
+        case 'EXPLICIT':
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return <ExplicitStage onComplete={(data: any) => handleStageComplete(data)} />;
+        case 'WELLBEING':
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            return <WellbeingStage onComplete={(data: any) => handleStageComplete(data)} />;
+        default:
+            return null;
+    }
+};
 
-    return (
-        <div className="min-h-screen bg-[#F5F5F7] text-gray-900 font-sans pb-safe flex flex-col">
-            {/* Header - HIDDEN on Intro */}
-            {currentStage !== 'INTRO' && (
-                <header className="h-14 flex items-center justify-center relative px-4">
-                    <button
-                        onClick={handleBack}
-                        className="absolute left-4 p-2 -ml-2 text-gray-400 hover:text-gray-900 rounded-full transition-all"
-                    >
-                        <ChevronLeft className="w-6 h-6" />
-                    </button>
-                    <div className="font-bold text-sm text-gray-500">
-                        {stageTitles[currentStage as TestStage]}
-                    </div>
-                </header>
-            )}
-
-            {/* Main Card Content */}
-            {/* If Intro: Full width, no padding. Else: Card style */}
-            <main className={`flex-1 flex items-center justify-center ${currentStage === 'INTRO' ? 'p-0' : 'px-6 pb-12'}`}>
-                <div className={`w-full relative ${currentStage === 'INTRO' ? '' : 'max-w-md bg-white rounded-[2.5rem] p-6 shadow-sm min-h-[60vh] flex flex-col justify-center'}`}>
-                    {getStageComponent()}
+return (
+    <div className="min-h-screen bg-[#F5F5F7] text-gray-900 font-sans pb-safe flex flex-col">
+        {/* Header - HIDDEN on Intro */}
+        {currentStage !== 'INTRO' && (
+            <header className="h-14 flex items-center justify-center relative px-4">
+                <button
+                    onClick={handleBack}
+                    className="absolute left-4 p-2 -ml-2 text-gray-400 hover:text-gray-900 rounded-full transition-all"
+                >
+                    <ChevronLeft className="w-6 h-6" />
+                </button>
+                <div className="font-bold text-sm text-gray-500">
+                    {stageTitles[currentStage as TestStage]}
                 </div>
-            </main>
-        </div>
-    );
+            </header>
+        )}
+
+        {/* Main Card Content */}
+        {/* If Intro: Full width, no padding. Else: Card style */}
+        <main className={`flex-1 flex items-center justify-center ${currentStage === 'INTRO' ? 'p-0' : 'px-6 pb-12'}`}>
+            <div className={`w-full relative ${currentStage === 'INTRO' ? '' : 'max-w-md bg-white rounded-[2.5rem] p-6 shadow-sm min-h-[60vh] flex flex-col justify-center'}`}>
+                {getStageComponent()}
+            </div>
+        </main>
+    </div>
+);
 }
