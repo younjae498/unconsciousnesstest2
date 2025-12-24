@@ -447,6 +447,7 @@ export default function ReportPage() {
                                                 <h4 className="text-lg font-bold text-gray-900">{(geminiAnalysis as any).deepAnalysis.persona.title}</h4>
                                             </div>
                                             <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                                 {(geminiAnalysis as any).deepAnalysis.persona.content}
                                             </p>
                                         </div>
@@ -462,12 +463,15 @@ export default function ReportPage() {
                                                 <div className="bg-purple-100 p-3 rounded-full">
                                                     <Lock className="w-6 h-6 text-purple-600" />
                                                 </div>
+                                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                                 <h4 className="text-lg font-bold text-gray-900">{(geminiAnalysis as any).deepAnalysis.shadow.title}</h4>
                                             </div>
                                             <p className="text-sm text-gray-600 leading-relaxed font-medium">
+                                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                                 {(geminiAnalysis as any).deepAnalysis.shadow.content}
                                             </p>
                                             <div className="flex gap-2 flex-wrap mt-2">
+                                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                                 {(geminiAnalysis as any).deepAnalysis.shadow.keywords.map((kw: string, i: number) => (
                                                     <span key={i} className="text-xs bg-purple-50 text-purple-600 px-2 py-1 rounded border border-purple-100">
                                                         #{kw}
@@ -484,9 +488,11 @@ export default function ReportPage() {
                                                 <div className="bg-red-100 p-3 rounded-full">
                                                     <div className="w-6 h-6 flex items-center justify-center font-bold text-red-600">!</div>
                                                 </div>
+                                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                                 <h4 className="text-lg font-bold text-gray-900">{(geminiAnalysis as any).deepAnalysis.conflict.title}</h4>
                                             </div>
                                             <p className="text-sm text-gray-600 leading-relaxed">
+                                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                                 {(geminiAnalysis as any).deepAnalysis.conflict.content}
                                             </p>
                                             <div className="w-full bg-gray-100 h-2 rounded-full mt-2 overflow-hidden">
@@ -503,13 +509,16 @@ export default function ReportPage() {
                                                 <div className="bg-blue-100 p-3 rounded-full">
                                                     <Sparkles className="w-6 h-6 text-blue-600" />
                                                 </div>
+                                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                                 <h4 className="text-lg font-bold text-gray-900">{(geminiAnalysis as any).deepAnalysis.potential.title}</h4>
                                             </div>
                                             <p className="text-sm text-gray-600 leading-relaxed border-l-2 border-blue-200 pl-4 italic">
-                                                "{(geminiAnalysis as any).deepAnalysis.potential.content}"
+                                                &quot;{/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                                {(geminiAnalysis as any).deepAnalysis.potential.content}&quot;
                                             </p>
                                             <div className="mt-2 bg-white p-3 rounded-xl border border-blue-100 shadow-sm">
                                                 <span className="text-xs uppercase tracking-wider text-blue-500 block mb-1">Action Point</span>
+                                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                                 <p className="text-sm font-bold text-gray-900">{(geminiAnalysis as any).deepAnalysis.potential.action}</p>
                                             </div>
                                         </div>
@@ -565,6 +574,7 @@ export default function ReportPage() {
                                     <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100">
                                         <h4 className="text-sm font-bold text-blue-800 mb-2">💡 목표 지원 메시지</h4>
                                         <p className="text-sm text-gray-700 leading-relaxed">
+                                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                             {(geminiAnalysis as any)?.action_plan?.goal_support}
                                         </p>
                                     </div>
@@ -576,8 +586,10 @@ export default function ReportPage() {
 
                                         {/* AI Sense Text List */}
                                         {/* Assuming sense_solutions is an object */}
+                                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                         {(geminiAnalysis as any)?.action_plan?.sense_solutions && (
                                             <div className="grid grid-cols-1 gap-3 text-sm">
+                                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                                 {Object.entries((geminiAnalysis as any).action_plan.sense_solutions).map(([sense, desc]: [string, any]) => (
                                                     <div key={sense} className="flex gap-3 items-start bg-gray-50 p-3 rounded-xl">
                                                         <span className="text-xs font-bold uppercase w-16 text-gray-400 mt-0.5">{sense}</span>
@@ -595,6 +607,7 @@ export default function ReportPage() {
                                     <div className="space-y-4">
                                         <h4 className="text-lg font-bold text-gray-900 px-2 border-l-4 border-gray-900">If-Then Implementation</h4>
                                         <div className="space-y-3">
+                                            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                                             {(geminiAnalysis as any)?.action_plan?.if_then_plans?.map((plan: any, idx: number) => (
                                                 <div key={idx} className="bg-white border border-gray-200 p-4 rounded-xl shadow-sm">
                                                     <div className="flex justify-between items-center mb-2">
@@ -619,7 +632,8 @@ export default function ReportPage() {
                                     <div className="bg-gray-900 text-white p-8 rounded-2xl text-center space-y-4 mt-8">
                                         <Sparkles className="w-8 h-8 mx-auto text-yellow-400 animate-pulse" />
                                         <p className="font-serif-kr text-lg leading-relaxed">
-                                            "{(geminiAnalysis as any)?.action_plan?.closing_message}"
+                                            &quot;{/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                            {(geminiAnalysis as any)?.action_plan?.closing_message}&quot;
                                         </p>
                                     </div>
                                 </div>

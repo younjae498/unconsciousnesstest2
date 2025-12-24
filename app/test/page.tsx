@@ -10,7 +10,7 @@ import ExplicitStage from './components/ExplicitStage';
 import WellbeingStage from './components/WellbeingStage';
 import { useTestStore } from '@/store/testStore';
 import { calculatePaimaScores } from '@/lib/scoring';
-import { determineDetailedProfile } from '@/lib/profiling';
+
 
 type TestStage = 'INTRO' | 'IAT' | 'IMPLICIT' | 'EXPLICIT' | 'WELLBEING';
 
