@@ -75,3 +75,26 @@ body {
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
+
+/* Paper and Book Aesthetics */
+.paper-texture {
+  background-color: #f4f1ea;
+  background-image: url('https://www.transparenttextures.com/patterns/creampaper.png');
+  position: relative;
+}
+
+.paper-texture::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.02) 100%);
+  pointer-events: none;
+}
+
+.book-page {
+  box-shadow: 
+    0 1px 3px rgba(0,0,0,0.1),
+    0 5px 15px rgba(0,0,0,0.05),
+    inset 0 0 100px rgba(0,0,0,0.02);
+  border-radius: 2px;
+}

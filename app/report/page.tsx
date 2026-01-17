@@ -16,8 +16,8 @@ import TherapyScrollCard from './components/TherapyScrollCard';
 
 
 // Helper: Map Z-Score (-2 to +2) to 0-100 scale
-const mapZ = (z: number | undefined) => {
-    if (z === undefined) return 50;
+const mapZ = (z: number | null | undefined) => {
+    if (z === undefined || z === null) return 50;
     // Map -2..+2 to 0..100
     // -2 -> 0, +2 -> 100
     const val = (z + 2) / 4 * 100;
@@ -134,12 +134,12 @@ export default function ReportPage() {
             implicit: { implicitAnswers: { a: 4, b: 4, c: 4 } },
             paima: {
                 profileKey: "DORMANT_RULER",
-                z_iM_Ach: 2.0, z_eM_Ach: 0.5,
-                z_iM_Pow: 2.5, z_eM_Pow: -1.0,
-                z_iM_Aff: 0.0, z_eM_Aff: 1.0,
-                z_MDI_Ach: 1.5, z_MDI_Pow: 3.5, z_MDI_Aff: 1.0,
-                z_PSCI: 2.0,
-                z_W_Wellbeing: -0.8
+                Z_iM_Ach: 2.0, Z_eM_Ach: 0.5,
+                Z_iM_Pow: 2.5, Z_eM_Pow: -1.0,
+                Z_iM_Aff: 0.0, Z_eM_Aff: 1.0,
+                Z_MDI_Ach: 1.5, Z_MDI_Pow: 3.5, Z_MDI_Aff: 1.0,
+                Z_PSCI: 2.0,
+                Z_W_Wellbeing: -0.8
             }
         };
 
@@ -264,6 +264,8 @@ export default function ReportPage() {
 
     if (!isClient) return null;
 
+    const paima = activeResults?.paima;
+
     // Dynamic Data Calculation
     const radarData = [
         { subject: '성취', A: mapZ(paima?.Z_iM_Ach), B: mapZ(paima?.Z_eM_Ach), fullMark: 100 },
@@ -279,7 +281,6 @@ export default function ReportPage() {
 
     const positiveEnergy = mapZ(paima?.Z_W_Wellbeing);
 
-    const paima = activeResults?.paima;
     // const profile = paima?.profileKey ? RESULT_PROFILES[paima.profileKey] : RESULT_PROFILES['DORMANT_RULER'];
 
     return (

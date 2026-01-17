@@ -104,7 +104,7 @@ interface AnalysisReportPDFProps {
         date: string;
     };
     results: any;
-    aiAnalysis?: string | null;
+    aiAnalysis?: any;
 }
 
 const AnalysisReportPDF = ({ userData, results, aiAnalysis }: AnalysisReportPDFProps) => {
@@ -346,7 +346,7 @@ const AnalysisReportPDF = ({ userData, results, aiAnalysis }: AnalysisReportPDFP
                         <View style={{ marginBottom: 15 }}>
                             <Text style={{ fontSize: 9, fontWeight: 'bold', marginBottom: 5 }}>이게 무슨 뜻이냐고?</Text>
                             <Text style={{ fontSize: 7.5, lineHeight: 1.6, color: '#333' }}>
-                                {profileData.internal_conflict}
+                                {aiAnalysis?.summary?.content || profileData.internal_conflict}
                             </Text>
                         </View>
 
@@ -612,7 +612,7 @@ const AnalysisReportPDF = ({ userData, results, aiAnalysis }: AnalysisReportPDFP
                         <View style={{ marginBottom: 20 }}>
                             <Text style={{ fontSize: 10, fontWeight: 'bold', marginBottom: 5 }}>자네가 보여주고 싶은 모습 (페르소나)</Text>
                             <Text style={{ fontSize: 8, lineHeight: 1.5, color: '#333' }}>
-                                {profileData.persona}
+                                {aiAnalysis?.deepAnalysis?.persona?.content || profileData.persona}
                             </Text>
                         </View>
 
@@ -620,7 +620,7 @@ const AnalysisReportPDF = ({ userData, results, aiAnalysis }: AnalysisReportPDFP
                         <View style={{ marginBottom: 20 }}>
                             <Text style={{ fontSize: 10, fontWeight: 'bold', marginBottom: 5 }}>자네의 진짜 에너지 (그림자)</Text>
                             <Text style={{ fontSize: 8, lineHeight: 1.5, color: '#333' }}>
-                                {profileData.shadow}
+                                {aiAnalysis?.deepAnalysis?.shadow?.content || profileData.shadow}
                             </Text>
                         </View>
 
@@ -630,7 +630,7 @@ const AnalysisReportPDF = ({ userData, results, aiAnalysis }: AnalysisReportPDFP
                                 내적 갈등 ({getInterpretation(paima.Z_PSCI ?? 0)}) | 피로도 ({getInterpretation(paima.Z_C_Depletion ?? 0)})
                             </Text>
                             <Text style={{ fontSize: 8, lineHeight: 1.5, color: '#333' }}>
-                                {profileData.internal_conflict}
+                                {aiAnalysis?.deepAnalysis?.conflict?.content || profileData.internal_conflict}
                             </Text>
                         </View>
                     </View>
@@ -680,7 +680,7 @@ const AnalysisReportPDF = ({ userData, results, aiAnalysis }: AnalysisReportPDFP
                         <View style={{ paddingLeft: 10 }}>
                             <Text style={{ fontSize: 9, fontWeight: 'bold', marginBottom: 3 }}>1. 갈등이 청구한 비용</Text>
                             <Text style={{ fontSize: 8, lineHeight: 1.5, marginBottom: 8 }}>
-                                {profileData.internal_conflict}
+                                {aiAnalysis?.deepAnalysis?.conflict?.content || profileData.internal_conflict}
                             </Text>
                             <Text style={{ fontSize: 8, lineHeight: 1.5, marginBottom: 8 }}>
                                 {profileData.risk_of_misalignment}
@@ -705,7 +705,7 @@ const AnalysisReportPDF = ({ userData, results, aiAnalysis }: AnalysisReportPDFP
                         <View style={{ marginBottom: 20 }}>
                             <Text style={{ fontSize: 9, fontWeight: 'bold', marginBottom: 3 }}>2. 잠재력의 재발견 (Reframing)</Text>
                             <Text style={{ fontSize: 8, lineHeight: 1.5, marginBottom: 6 }}>
-                                {profileData.latent_potential.reframed_shadow}
+                                {aiAnalysis?.deepAnalysis?.potential?.content || profileData.latent_potential.reframed_shadow}
                             </Text>
                             <View style={{ paddingLeft: 10, marginBottom: 8 }}>
                                 <View style={{ flexDirection: 'row', marginBottom: 2 }}>
@@ -719,7 +719,7 @@ const AnalysisReportPDF = ({ userData, results, aiAnalysis }: AnalysisReportPDFP
                             </View>
 
                             <Text style={{ fontSize: 8, lineHeight: 1.5, marginTop: 5 }}>
-                                {profileData.behavioral_tendencies}
+                                {aiAnalysis?.deepAnalysis?.potential?.action || profileData.behavioral_tendencies}
                             </Text>
                         </View>
                     </View>
@@ -790,40 +790,34 @@ const AnalysisReportPDF = ({ userData, results, aiAnalysis }: AnalysisReportPDFP
                     {/* Column 1: 외적 변화 */}
                     <View style={{ width: '31%' }}>
                         <Text style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 8 }}>외적 변화 (환경 조성)</Text>
-                        <View style={{ marginBottom: 12 }}>
-                            <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>IF (상황): 내 말이 가볍게 여겨지는 것 같을 때,</Text>
-                            <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>THEN (행동): 헐렁한 옷 대신 어깨 선이 딱 떨어지는 셔츠나 재킷을 입고, 평소보다 목소리 톤을 한 키 낮춘다.</Text>
-                        </View>
-                        <View>
-                            <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>IF (상황): 책상이 어지러워 집중이 안 될 때,</Text>
-                            <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>THEN (행동): 모든 물건을 수직/수평으로 정렬하여 내 공간에 대한 '완벽한 통제감'을 느낀다</Text>
-                        </View>
+                        {aiAnalysis?.action_plan?.if_then_plans?.filter((p: any) => p.category === 'Appearance' || p.category === '외적 변화').slice(0, 2).map((plan: any, i: number) => (
+                            <View key={i} style={{ marginBottom: 12 }}>
+                                <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>IF (상황): {plan.situation}</Text>
+                                <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>THEN (행동): {plan.action}</Text>
+                            </View>
+                        ))}
                     </View>
 
                     {/* Column 2: 마인드셋 */}
                     <View style={{ width: '31%' }}>
                         <Text style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 8 }}>마인드셋 (생각의 전환)</Text>
-                        <View style={{ marginBottom: 12 }}>
-                            <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>IF (상황): 누군가의 일 처리가 답답해서 비판하고 싶은 마음이 들 때,</Text>
-                            <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>THEN (행동): "이건 내가 더 잘할 수 있다는 신호다. 비난 대신 내가 맡을 부분을 제안하자"라고 되뇐다.</Text>
-                        </View>
-                        <View>
-                            <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>IF (상황): 사람들 앞에 나서기가 두려워 숨고 싶을 때,</Text>
-                            <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>THEN (행동): "나는 숨어있기엔 너무 큰 에너지를 가졌다"라고 생각하며 한 발자국 앞으로 나간다.</Text>
-                        </View>
+                        {aiAnalysis?.action_plan?.if_then_plans?.filter((p: any) => p.category === 'Mindset' || p.category === '마인드셋').slice(0, 2).map((plan: any, i: number) => (
+                            <View key={i} style={{ marginBottom: 12 }}>
+                                <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>IF (상황): {plan.situation}</Text>
+                                <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>THEN (행동): {plan.action}</Text>
+                            </View>
+                        ))}
                     </View>
 
                     {/* Column 3: 행동 */}
                     <View style={{ width: '31%' }}>
                         <Text style={{ fontSize: 13, fontWeight: 'bold', marginBottom: 8 }}>행동 (실질적 변화)</Text>
-                        <View style={{ marginBottom: 12 }}>
-                            <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>IF (상황): 회의나 모임에서 침묵이 흐르거나 정리가 안 될 때,</Text>
-                            <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>THEN (행동): 가장 먼저 입을 열어 "지금 우리가 결정해야 할 것이 이것이군요"라고 요약한다.</Text>
-                        </View>
-                        <View>
-                            <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>IF (상황): 친구들이 메뉴나 장소를 못 정해 우왕좌왕할 때,</Text>
-                            <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>THEN (행동): "내가 찾아볼게"라며 3가지 선택지를 추려서 제시한다.</Text>
-                        </View>
+                        {aiAnalysis?.action_plan?.if_then_plans?.filter((p: any) => p.category === 'Action' || p.category === '행동').slice(0, 2).map((plan: any, i: number) => (
+                            <View key={i} style={{ marginBottom: 12 }}>
+                                <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>IF (상황): {plan.situation}</Text>
+                                <Text style={{ fontSize: 9, lineHeight: 1.4, color: '#000' }}>THEN (행동): {plan.action}</Text>
+                            </View>
+                        ))}
                     </View>
                 </View>
 
@@ -836,7 +830,7 @@ const AnalysisReportPDF = ({ userData, results, aiAnalysis }: AnalysisReportPDFP
                     <View style={{ alignItems: 'center' }}>
                         <Text style={{ fontSize: 11, fontWeight: 'bold', marginBottom: 5 }}>마치며</Text>
                         <Text style={{ fontSize: 9, lineHeight: 1.6, textAlign: 'center', color: '#000', paddingHorizontal: 40 }}>
-                            자네는 그동안 너무 겸손했네. 야망은 죄가 아니라네. 그것은 세상을 더 나은 곳으로 바꿀 연료일 뿐이야. 2026년에는 부디 그 왕좌에 앉아 자네만의 세상을 호령해 보게나. 자네는 충분히 그럴 자격이 있어. 응원하네.
+                            {aiAnalysis?.action_plan?.closing_message || "자네는 그동안 너무 겸손했네. 야망은 죄가 아니라네. 그것은 세상을 더 나은 곳으로 바꿀 연료일 뿐이야. 2026년에는 부디 그 왕좌에 앉아 자네만의 세상을 호령해 보게나. 자네는 충분히 그럴 자격이 있어. 응원하네."}
                         </Text>
                     </View>
                 </View>

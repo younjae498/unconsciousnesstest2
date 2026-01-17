@@ -6,6 +6,7 @@ interface RawData {
     explicitAnswers: Record<string, number>; // "index": 0-6 (Likert 7 point usually) - need to check LikertScale
     wellbeingAnswers: Record<string, number>; // "index": 0-6
     iatAnswers?: number[]; // Reaction Times in ms (114 trials expected)
+    stareData?: { monsterGaze: number; forestGaze: number };
 }
 
 export interface PaimaScores {
@@ -80,7 +81,7 @@ const calculateIAT_PSCI = (times: number[] | undefined): number => {
 };
 
 export const calculatePaimaScores = (data: RawData): PaimaScores => {
-    const { implicitAnswers, explicitAnswers, wellbeingAnswers, iatAnswers } = data;
+    const { implicitAnswers, explicitAnswers, wellbeingAnswers, iatAnswers, stareData } = data;
 
     // --- 0. Z_PSCI (from IAT) ---
     const Z_PSCI = calculateIAT_PSCI(iatAnswers);
@@ -117,9 +118,9 @@ export const calculatePaimaScores = (data: RawData): PaimaScores => {
     const raw_iPow = iPowHope - iPowFear;
     const raw_iAff = iAffHope - iAffFear;
 
-    const Z_iM_Ach = mapToZ(raw_iAch, -60, 60);
-    const Z_iM_Pow = mapToZ(raw_iPow, -60, 60);
-    const Z_iM_Aff = mapToZ(raw_iAff, -60, 60);
+    const Z_iM_Ach = mapToZ(raw_iAch, -24, 24);
+    const Z_iM_Pow = mapToZ(raw_iPow, -24, 24);
+    const Z_iM_Aff = mapToZ(raw_iAff, -24, 24);
 
     // --- 2. Explicit Motives (eM) ---
     // 9 Questions (Likert 1-5). Normalized 0-4.
@@ -172,8 +173,21 @@ export const calculatePaimaScores = (data: RawData): PaimaScores => {
     // Conflict External (Q18) - Single Item
     const Z_C_External = mapToZ(getWB(17), 0, 4);
 
+    // --- 5. Custom Interaction: Shadow Curiosity ---
+    // Using stareData to adjust Z_PSCI (Unconscious Acceptance)
+    let shadowAdjustment = 0;
+    if (stareData) {
+        const totalGaze = stareData.monsterGaze + stareData.forestGaze;
+        if (totalGaze > 0) {
+            const monsterRatio = stareData.monsterGaze / totalGaze;
+            // High gaze on monster -> Higher acceptance of shadow -> Lower PSCI conflict
+            // Map 0..1 ratio to -0.5 to +0.5 adjustment
+            shadowAdjustment = (monsterRatio - 0.5);
+        }
+    }
+
     return {
-        Z_PSCI, // From IAT D-Score
+        Z_PSCI: Z_PSCI - shadowAdjustment, // Adjusted by interaction
         Z_MDI_Ach, Z_MDI_Pow, Z_MDI_Aff,
         Z_iM_Ach, Z_iM_Pow, Z_iM_Aff,
         Z_eM_Ach, Z_eM_Pow, Z_eM_Aff,

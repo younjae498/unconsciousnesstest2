@@ -15,26 +15,12 @@ export default function HomePage() {
     const { currentStep, setStep, setIatResults, iatResults, implicitAnswers, explicitAnswers, wellbeingAnswers, explicitGoal, setTestResult } = useTestStore();
     const router = useRouter();
 
-    // Splash Screen Logic
-    const [isFadingOut, setIsFadingOut] = React.useState(false);
-
     useEffect(() => {
         if (currentStep === "INTRO") {
-            // 1. Wait 3 seconds
-            const timer1 = setTimeout(() => {
-                setIsFadingOut(true); // Trigger Fade Out
-            }, 3000);
-
-            // 2. Navigate after Fade Out (e.g. 1 sec duration)
-            const timer2 = setTimeout(() => {
-                // Navigate to Test
+            const timer = setTimeout(() => {
                 router.push('/test');
-            }, 4000);
-
-            return () => {
-                clearTimeout(timer1);
-                clearTimeout(timer2);
-            };
+            }, 3000);
+            return () => clearTimeout(timer);
         }
     }, [currentStep, router]);
 
@@ -132,17 +118,9 @@ export default function HomePage() {
         switch (currentStep) {
             case "INTRO":
                 return (
-                    <div className={`flex flex-col items-center justify-center min-h-screen bg-black transition-opacity duration-1000 ease-in-out ${isFadingOut ? 'opacity-0' : 'opacity-100'}`}>
-                        {/* Logo/Splash Image */}
-                        <div className="relative w-full max-w-md aspect-square animate-in slide-in-from-bottom-10 fade-in duration-1000">
-                            {/* Glow Effect behind logo */}
-                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-blue-500/20 rounded-full blur-[100px] animate-pulse"></div>
-
-                            <img
-                                src="/intro_splash.png"
-                                alt="Unconscious Test Intro"
-                                className="w-full h-full object-contain drop-shadow-2xl relative z-10"
-                            />
+                    <div className="fixed inset-0 bg-black flex items-center justify-center">
+                        <div className="text-white font-display text-4xl italic tracking-widest animate-pulse">
+                            잠재의식의 숲으로...
                         </div>
                     </div>
                 );
@@ -168,7 +146,7 @@ export default function HomePage() {
     };
 
     return (
-        <main className="min-h-screen bg-gray-50 text-gray-900 font-sans">
+        <main className="min-h-screen bg-black text-white selection:bg-white selection:text-black">
             {renderContent()}
         </main>
     );

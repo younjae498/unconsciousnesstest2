@@ -123,6 +123,17 @@ export default function IATTest({ onComplete }: IATTestProps) {
         }
     }, [stageIndex, onComplete]);
 
+    // Define advanceTrial BEFORE handleInput to avoid temporal dead zone
+    const advanceTrial = useCallback(() => {
+        if (currentTrialIndex + 1 < trials.length) {
+            setCurrentTrialIndex((prev) => prev + 1);
+            startTimeRef.current = performance.now(); // Reset timer for next word
+        } else {
+            // Stage Done
+            setStageIndex((prev) => prev + 1);
+        }
+    }, [currentTrialIndex, trials.length]);
+
     // Key Handler
     const handleInput = useCallback(
         (direction: "LEFT" | "RIGHT") => {
@@ -186,16 +197,6 @@ export default function IATTest({ onComplete }: IATTestProps) {
         },
         [isStarted, completed, showError, trials, currentTrialIndex, stageIndex, advanceTrial]
     );
-
-    const advanceTrial = useCallback(() => {
-        if (currentTrialIndex + 1 < trials.length) {
-            setCurrentTrialIndex((prev) => prev + 1);
-            startTimeRef.current = performance.now(); // Reset timer for next word
-        } else {
-            // Stage Done
-            setStageIndex((prev) => prev + 1);
-        }
-    }, [currentTrialIndex, trials.length]);
 
     // Keyboard listener
     useEffect(() => {
